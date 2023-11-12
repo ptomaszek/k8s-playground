@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kaniko
+spec:
+  restartPolicy: Never
+  containers:
+    - name: kaniko
+      image: gcr.io/kaniko-project/executor:latest
+      args: [
+        "--context=/workspace/app",
+        "--dockerfile=infrastructure/docker/Dockerfile",
+        "--no-push"
+      ]
+      volumeMounts:
+        - name: k8s-playground-directory-volume
+          mountPath: /workspace
+  volumes: # has to be mounted into minikube
+    - name: k8s-playground-directory-volume
+      hostPath:
+        path: /k8s-playground
+        type: Directory
